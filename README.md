@@ -16,19 +16,30 @@ db2audit configure scope all status both errortype normal datapath /mnt/PV/versi
 ### Check the DB2 Audit is enabled for complete monitoring
 
 [bigsql@dv cli]# db2audit describe
+
 DB2 AUDIT SETTINGS:
 
 Audit active: "FALSE "
+
 Log audit events: "BOTH"
+
 Log checking events: "BOTH"
+
 Log object maintenance events: "BOTH"
+
 Log security maintenance events: "BOTH"
+
 Log system administrator events: "BOTH"
+
 Log validate events: "BOTH"
+
 Log context events: "BOTH"
+
 Return SQLCA on audit error: "FALSE "
-Audit Data Path: "/var/log/bigsql/cli/db2audit/data/"
-Audit Archive Path: "/var/log/bigsql/cli/db2audit/archivedata/"
+
+Audit Data Path: "/mnt/PV/versioned/db2audit/data/"
+
+Audit Archive Path: "/mnt/PV/versioned/db2audit/archivedata/"
 
 AUD0000I Operation succeeded.
 
@@ -44,23 +55,35 @@ db2 AUDIT DATABASE USING POLICY auditPolicy1
 db2audit start
 
 [bigsql@dv archivedata]# db2 commit
+
 DB20000I The SQL command completed successfully.
 
 ### Check Audit is Enabled
 [bigsql@dv archivedata]# db2audit describe
+
 DB2 AUDIT SETTINGS:
 
 Audit active: "TRUE "
+
 Log audit events: "BOTH"
+
 Log checking events: "BOTH"
+
 Log object maintenance events: "BOTH"
+
 Log security maintenance events: "BOTH"
+
 Log system administrator events: "BOTH"
+
 Log validate events: "BOTH"
+
 Log context events: "BOTH"
+
 Return SQLCA on audit error: "FALSE "
-Audit Data Path: "/var/log/bigsql/cli/db2audit/data/"
-Audit Archive Path: "/var/log/bigsql/cli/db2audit/archivedata/"
+
+Audit Data Path: "/mnt/PV/versioned/db2audit/data/"
+
+Audit Archive Path: "/mnt/PV/versioned/db2audit/archivedata/"
 
 AUD0000I Operation succeeded.
 
@@ -80,7 +103,11 @@ db2audit flush
 db2audit archive database bigsql
 
 ### Extract the Audit data
-cd /var/log/bigsql/cli/db2audit/archivedata/
+cd /mnt/PV/versioned/db2audit/archivedata/
 
 db2audit extract file audit2.aud from files db2audit.db.BIGSQL.log.0.20210216175131
 
+### Copy the Audit file outside the DV pod on local machine
+oc cp dv-engine-0:/mnt/PV/versioned/db2audit/archivedata/audit2.aud audit2.aud
+
+tar: Removing leading `/' from member names
